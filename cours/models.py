@@ -21,15 +21,30 @@ class Contenu(models.Model):
     data = models.TextField()
     chapitre = models.ForeignKey(Chapitre, on_delete=models.CASCADE)
 
+    def __str__(self):
+        # Affiche le type de contenu et un extrait des 50 premiers caractères de data
+        return f"{self.type_contenu}: {self.data[:50]}..."  # Limite l'affichage à 50 caractères
+
+
 class Quiz(models.Model):
     titre = models.CharField(max_length=100)
     matiere = models.ForeignKey(Matiere, on_delete=models.CASCADE)
     nombreTentatives = models.IntegerField(default=1)
     correctionAutomatique = models.BooleanField(default=False)
 
+    def __str__(self):
+        # Affiche le titre du quiz et la matière associée
+        return f"{self.titre} - Matière: {self.matiere.nom}"
+
+
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     contenu = models.TextField()
+
+    def __str__(self):
+        # Affiche le titre du quiz et un extrait du contenu de la question
+        return f"Quiz: {self.quiz.titre} - Question: {self.contenu[:50]}..."  # Limite l'affichage à 50 caractères
+
 
 class Note(models.Model):
     etudiant = models.ForeignKey(User, on_delete=models.CASCADE)
