@@ -2,16 +2,20 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import Matiere, Chapitre, Contenu, Quiz, Question, Note, Profile
+from .forms import MatiereAdminForm  # Ton formulaire personnalisé
 
-# Enregistre les modèles classiques
-admin.site.register(Matiere)
+# Personnalisation Matiere
+class MatiereAdmin(admin.ModelAdmin):
+    form = MatiereAdminForm
+
+admin.site.register(Matiere, MatiereAdmin) # Enregistre directement sans unregister
+
+# Autres modèles (inchangés)
 admin.site.register(Chapitre)
 admin.site.register(Contenu)
 admin.site.register(Quiz)
 admin.site.register(Question)
 admin.site.register(Note)
-
-# Profile admin classique
 admin.site.register(Profile)
 
 # Personnalisation avancée de l'affichage User/Profile
@@ -28,6 +32,6 @@ class UserAdmin(BaseUserAdmin):
         return instance.profile.get_role_display()
     get_role.short_description = 'Rôle'
 
-# On désenregistre et réenregistre le modèle User
+# Réenregistrement du modèle User
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
